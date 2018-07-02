@@ -75,7 +75,7 @@ contract CrowdFunding {
         // キャンペーンが終わっていれば処理を中断させる
         require(!isPromotionEnded());
 
-        Investor investor = mInvesters[mInvestorsConunt++];
+        Investor storage investor = mInvesters[mInvestorsConunt++];
         investor.mAddress = msg.sender;
         investor.mAmount = msg.value;
         mPromotion.mTotalAmount += investor.mAmount;
@@ -94,8 +94,8 @@ contract CrowdFunding {
             // キャンペーン成功
             mPromotion.mStatus = Status.SUCCESS;
             // オーナー送金する
-            if (!mOwner.mAddress.send(this.balance)) {
-                revert('オーナーへの送金に失敗しました');
+            if (!mOwner.mAddress.send(address(this).balance)) {
+                revert();
             }
         } else {
             // キャンペーン失敗
@@ -104,7 +104,7 @@ contract CrowdFunding {
             uint i = 0;
             while (i <= mInvestorsConunt) {
                 if (!mInvesters[i].mAddress.send(mInvesters[i].mAmount)) {
-                    revert('投資家への返金に失敗しました');
+                    revert();
                 }
                 i++;
             }
