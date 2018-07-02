@@ -50,13 +50,14 @@ contract CrowdFunding {
     // 投資家管理用のマップ
     mapping (uint => Investor) public mInvesters;
 
+    // オーナー限定のアクセス修飾子を作成
     modifier onlyOwner() {
         require(msg.sender == mOwner.mAddress);
         _;
     }
 
     // コンストラクタ
-    function CrowdFunding(uint duration, uint goalAmount) {
+    function CrowdFunding(uint duration, uint goalAmount) public {
         mOwner.mAddress =  msg.sender;
         mPromotion.mStatus = Status.FUND;
         mPromotion.mTotalAmount = 0;
@@ -70,7 +71,7 @@ contract CrowdFunding {
     }
 
     // 投資する際に呼び出される関数
-    function fund() payable {
+    function fund() payable public {
         // キャンペーンが終わっていれば処理を中断させる
         require(!isPromotionEnded());
 
@@ -81,7 +82,7 @@ contract CrowdFunding {
     }
 
     // 目標額に達したかを確認して、キャンペーンの成果における適切な処理を行う
-    function checkGoalReadched() public onlyOwner {
+    function checkGoalReached() public onlyOwner {
         // キャンペーンが終わっていれば処理を中断させる
         require(!isPromotionEnded());
 
@@ -94,7 +95,7 @@ contract CrowdFunding {
             mPromotion.mStatus = Status.SUCCESS;
             // オーナー送金する
             if (!mOwner.mAddress.send(this.balance)) {
-                throw;
+                revert('オーナーへの送金に失敗しました');
             }
         } else {
             // キャンペーン失敗
@@ -103,7 +104,7 @@ contract CrowdFunding {
             uint i = 0;
             while (i <= mInvestorsConunt) {
                 if (!mInvesters[i].mAddress.send(mInvesters[i].mAmount)) {
-                    throw;
+                    revert('投資家への返金に失敗しました');
                 }
                 i++;
             }
