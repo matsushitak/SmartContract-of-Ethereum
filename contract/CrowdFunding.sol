@@ -104,7 +104,7 @@ contract CrowdFunding {
         // 最低投資額を調整する
         uint restAmount = mPromotion.mGoalAmount - mPromotion.mTotalAmount;
         if (0 < restAmount && restAmount < mPromotion.mMinAmount) {
-            setMinAmount(restAmount);
+            mPromotion.mMinAmount = restAmount;
         }
     }
 
