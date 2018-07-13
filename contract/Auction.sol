@@ -32,8 +32,26 @@ contract Mortal is Owned {
     }
 }
 
+// CircuitBreakerパターン
+contract CircuitBreaker is Mortal {
+    
+    // コントラクト稼働フラグ
+    bool public isActive = true;
+    
+    // コントラクト稼働制御modifier
+    modifier active() {
+        require(isActive);
+        _;
+    }
+    
+    // 稼働フラグを設定
+    function setActice(bool _isActive) onlyOwner {
+        isActive = _isActive;
+    }
+}
+
 // オークションのコントラクト
-contract Auction {
+contract Auction is CircuitBreaker {
     
     // 最高提示者
     address public heighestBidder;
