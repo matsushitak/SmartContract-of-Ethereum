@@ -12,14 +12,14 @@ contract Owned {
         _;
     }
     
-    // 現在のアクセスをオーナーに設定
-    function owned() internal {
+    // コンストラクタ
+    function Owned() public {
         owner == msg.sender;
     }
     
     // オーナーを設定
-    function setOwner(address newOwner) public onlyOwner {
-        owner = newOwner;
+    function setOwner(address _owner) public onlyOwner {
+        owner = _owner;
     }
 }
 
