@@ -23,6 +23,15 @@ contract Owned {
     }
 }
 
+// Mortalパターン
+contract Mortal is Owned {
+    
+    // コントラクトを破棄 & オーナー送金
+    function kill() public onlyOwner {
+        selfdestruct(owner);
+    }
+}
+
 // オークションのコントラクト
 contract Auction {
     
