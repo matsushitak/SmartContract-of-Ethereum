@@ -8,6 +8,9 @@ contract Auction {
     // 最高提示額
     uint public heighestBid;
     
+    // 提示者と提示額を管理
+    mapping(address => uint) public bidderBalance;
+    
     // コンストラクタ
     function Auction() payable {
         heighestBidder = msg.sender;
@@ -21,14 +24,24 @@ contract Auction {
         uint newBid = msg.value;
         // 最高提示額を超えることを確認
         require(newBid > heighestBid);
-        // 現在の最高提示者と最高提示額を退避
-        address refundBidder = heighestBidder;
-        uint refundBid = heighestBid;
+        // 提示者と提示額を管理
+        bidderBalance[newBidder] += newBid;
         // 最高提示者と最高提示額を更新
         heighestBidder = newBidder;
         heighestBid = newBid;
-        // 元の最高提示者に返金
+    }
+    
+    // 提示額を引き出す
+    function withdraw() public {
+        // 返金者を取得
+        address refundBidder = msg.sender;
+        uint refundBid = bidderBalance[refundBidder];
+        // 返金額が0よりも多いことを確認
+        require(refundBid > 0);
+        // 返金を行う
         if (refundBidder.send(refundBid)) {
+            bidderBalance[refundBidder] = 0;
+        } else {
             revert();
         }
     }
