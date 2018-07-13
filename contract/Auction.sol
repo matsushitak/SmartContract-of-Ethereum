@@ -68,7 +68,7 @@ contract Auction is CircuitBreaker {
     }
     
     // 提示する
-    function bid() public payable {
+    function bid() public payable active {
         // 新規提示者と新規提示額を取得
         address newBidder = msg.sender;
         uint newBid = msg.value;
@@ -82,7 +82,7 @@ contract Auction is CircuitBreaker {
     }
     
     // 提示額を引き出す
-    function withdraw() public {
+    function withdraw() public active {
         // 返金者を取得
         address refundBidder = msg.sender;
         uint refundBid = bidderBalance[refundBidder];
