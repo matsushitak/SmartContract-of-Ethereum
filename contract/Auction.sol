@@ -1,5 +1,28 @@
 pragma solidity ^0.4.18;
 
+// オーナー管理コントラクト
+contract Owned {
+    
+    // オーナー
+    address public owner;
+    
+    // オーナー専用のmodifier
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+    
+    // 現在のアクセスをオーナーに設定
+    function owned() internal {
+        owner == msg.sender;
+    }
+    
+    // オーナーを設定
+    function setOwner(address newOwner) public onlyOwner {
+        owner = newOwner;
+    }
+}
+
 // オークションのコントラクト
 contract Auction {
     
