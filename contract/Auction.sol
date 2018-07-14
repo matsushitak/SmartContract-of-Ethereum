@@ -61,14 +61,27 @@ contract Auction is CircuitBreaker {
     // 提示者と提示額を管理
     mapping(address => uint) public bidderBalance;
     
+    // 入札受付終了時間
+    uint public limitTime;
+    
+    // 入札受付終了時間のmodifier
+    modifier limit() {
+        require(now > limitTime);
+        _;
+    }
+    
     // コンストラクタ
-    function Auction() payable {
+    function Auction(uint _limitTime) payable {
+        // 終了時間を設定
+        require(_limitTime > 0);
+        limitTime = _limitTime;
+        
         heighestBidder = msg.sender;
         heighestBid = 0;
     }
     
     // 提示する
-    function bid() public payable active {
+    function bid() public payable active limit {
         // 新規提示者と新規提示額を取得
         address newBidder = msg.sender;
         uint newBid = msg.value;
