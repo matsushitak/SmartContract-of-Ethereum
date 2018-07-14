@@ -71,7 +71,7 @@ contract Auction is CircuitBreaker {
     }
     
     // コンストラクタ
-    function Auction(uint _limitTime) payable {
+    function Auction(uint _limitTime) {
         // 終了時間を設定
         require(_limitTime > 0);
         limitTime = _limitTime;
