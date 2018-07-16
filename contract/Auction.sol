@@ -101,11 +101,9 @@ contract Auction is CircuitBreaker {
         uint refundBid = bidderBalance[refundBidder];
         // 返金額が0よりも多いことを確認
         require(refundBid > 0);
+        // 二重送金を防ぐために提示者管理を0にする
+        bidderBalance[refundBidder] = 0;
         // 返金を行う
-        if (refundBidder.send(refundBid)) {
-            bidderBalance[refundBidder] = 0;
-        } else {
-            revert();
-        }
+        refundBidder.transfer(refundBid);
     }
 }
