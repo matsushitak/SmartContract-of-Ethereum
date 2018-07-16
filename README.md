@@ -25,6 +25,16 @@
 
 * 公式のEthereumのDockerイメージ
     * https://geth.ethereum.org/downloads/
+    
+### Genache
+
+* Etheruemのテスト環境を構築するツール
+    * https://truffleframework.com/ganache
+    
+## ライブラリ
+    
+* OpenZeppelin
+    * https://github.com/OpenZeppelin/openzeppelin-solidity
 
 ## ライセンス
 
