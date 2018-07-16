@@ -1,4 +1,4 @@
-pragma solidity ^0.4.18;
+pragma solidity ^0.4.24;
 
 // オーナー管理コントラクト
 contract Owned {
@@ -13,7 +13,7 @@ contract Owned {
     }
     
     // コンストラクタ
-    function Owned() public {
+    constructor() public {
         owner == msg.sender;
     }
     
@@ -45,7 +45,7 @@ contract CircuitBreaker is Mortal {
     }
     
     // 稼働フラグを設定
-    function setActice(bool _isActive) onlyOwner {
+    function setActice(bool _isActive) public onlyOwner {
         isActive = _isActive;
     }
 }
@@ -77,7 +77,7 @@ contract Auction is CircuitBreaker {
     }
     
     // コンストラクタ
-    function Auction(uint _receptionTime) {
+    constructor(uint _receptionTime) public {
         // 終了時間を設定
         require(_receptionTime > 0);
         receptionTime = _receptionTime;
