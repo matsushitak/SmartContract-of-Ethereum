@@ -1,57 +1,12 @@
 pragma solidity ^0.4.24;
 
-// オーナー管理コントラクト
-contract Owned {
-    
-    // オーナー
-    address public owner;
-    
-    // オーナー専用のmodifier
-    modifier onlyOwner() {
-        require(msg.sender == owner);
-        _;
-    }
-    
-    // コンストラクタ
-    constructor() public {
-        owner == msg.sender;
-    }
-    
-    // オーナーを設定
-    function setOwner(address _owner) public onlyOwner {
-        owner = _owner;
-    }
-}
-
 // Mortalパターン
-contract Mortal is Owned {
-    
-    // コントラクトを破棄 & オーナー送金
-    function kill() public onlyOwner {
-        selfdestruct(owner);
-    }
-}
-
+import "../node_modules/openzeppelin-solidity/contracts/lifecycle/Destructible.sol";
 // CircuitBreakerパターン
-contract CircuitBreaker is Mortal {
-    
-    // コントラクト稼働フラグ
-    bool public isActive = true;
-    
-    // コントラクト稼働制御modifier
-    modifier active() {
-        require(isActive);
-        _;
-    }
-    
-    // 稼働フラグを設定
-    function setActice(bool _isActive) public onlyOwner {
-        isActive = _isActive;
-    }
-}
+import "../node_modules/openzeppelin-solidity/contracts/lifecycle/Pausable.sol";
 
 // オークションのコントラクト
-contract Auction is CircuitBreaker {
+contract Auction is Destructible, Pausable {
     
     // 最高提示者
     address public heighestBidder;
@@ -87,7 +42,7 @@ contract Auction is CircuitBreaker {
     }
     
     // 提示する
-    function bid() public payable active receptionOpen {
+    function bid() public payable whenNotPaused receptionOpen {
         // 新規提示者と新規提示額を取得
         address newBidder = msg.sender;
         uint newBid = msg.value;
@@ -101,7 +56,7 @@ contract Auction is CircuitBreaker {
     }
     
     // 提示額を引き出す
-    function withdraw() public active receptionClose {
+    function withdraw() public whenNotPaused receptionClose {
         // 返金者を取得
         address refundBidder = msg.sender;
         uint refundBid = bidderBalance[refundBidder];
