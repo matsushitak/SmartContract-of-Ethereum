@@ -62,26 +62,32 @@ contract Auction is CircuitBreaker {
     mapping(address => uint) public bidderBalance;
     
     // 入札受付終了時間
-    uint public limitTime;
+    uint public receptionTime;
+    
+    // 入札受付中のmodifier
+    modifier receptionOpen() {
+        require(now <= receptionTime);
+        _;
+    }
     
     // 入札受付終了時間のmodifier
-    modifier limit() {
-        require(now > limitTime);
+    modifier receptionClose() {
+        require(now > receptionTime);
         _;
     }
     
     // コンストラクタ
-    function Auction(uint _limitTime) {
+    function Auction(uint _receptionTime) {
         // 終了時間を設定
-        require(_limitTime > 0);
-        limitTime = _limitTime;
+        require(_receptionTime > 0);
+        receptionTime = _receptionTime;
         
         heighestBidder = msg.sender;
         heighestBid = 0;
     }
     
     // 提示する
-    function bid() public payable active limit {
+    function bid() public payable active receptionOpen {
         // 新規提示者と新規提示額を取得
         address newBidder = msg.sender;
         uint newBid = msg.value;
@@ -95,7 +101,7 @@ contract Auction is CircuitBreaker {
     }
     
     // 提示額を引き出す
-    function withdraw() public active {
+    function withdraw() public active receptionClose {
         // 返金者を取得
         address refundBidder = msg.sender;
         uint refundBid = bidderBalance[refundBidder];
