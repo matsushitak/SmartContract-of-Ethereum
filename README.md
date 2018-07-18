@@ -1,6 +1,6 @@
 # SmartContract-of-Ethereum
 
-![Solidity](https://img.shields.io/badge/Solidity-0.4.18-blue.svg)
+![Solidity](https://img.shields.io/badge/Solidity-0.4.24-blue.svg)
 
 ## 概要
 

@@ -1,0 +1,19 @@
+{
+  "name": "SmartContract-of-Ethereum",
+  "version": "1.0.0",
+  "description": "![Solidity](https://img.shields.io/badge/Solidity-0.4.18-blue.svg)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github-trickring:trickring/SmartContract-of-Ethereum.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "openzeppelin-solidity": "1.11.0"
+  }
+}
