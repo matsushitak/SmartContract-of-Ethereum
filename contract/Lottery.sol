@@ -14,7 +14,7 @@ contract Lottery is Destructible, Pausable {
     }
     
     // 応募する
-    function apply() public payable whenNotPaused {
+    function apply() public whenNotPaused {
         
     }
     
