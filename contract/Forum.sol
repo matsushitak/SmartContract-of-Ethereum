@@ -18,6 +18,9 @@ contract Forum is Destructible, Pausable {
         string content;
     }
     
+    // 掲示板タイトル
+    string public title;
+    
     // 投稿管理
     mapping(address => Contribution) private contributions;
     // 投稿数
@@ -25,7 +28,13 @@ contract Forum is Destructible, Pausable {
     
     // コンストラクタ
     constructor() public {
-        
+        title = "スマートコントラクト掲示板";
+    }
+    
+    // タイトルを設定
+    function setTitle(string _title) public onlyOwner {
+        require(bytes(_title).length > 0);
+        title = _title;
     }
     
     // 投稿
