@@ -22,7 +22,7 @@ contract Forum is Destructible, Pausable {
     string public title;
     
     // 投稿管理
-    mapping(address => Contribution) private contributions;
+    Contribution[] private contributions;
     // 投稿数
     uint private contributionCount;
     
@@ -48,7 +48,7 @@ contract Forum is Destructible, Pausable {
             _name = "名無しさん";
         }
         // 投稿を作成して保存
-        contributions[msg.sender] = createContribution(_name, _email, _content);
+        contributions[contributionCount] = createContribution(_name, _email, _content);
         contributionCount++;
     }
     
@@ -60,4 +60,10 @@ contract Forum is Destructible, Pausable {
         contribution.content = _content;
         return contribution;
     }
+    
+    // TODO:ParserErrorになってしまうので、修正が必要
+    // 投稿を取得
+    // function getContributions() public returns (Contribution[]) onlyOwner {
+    //     return contributions;
+    // }
 }
