@@ -61,9 +61,10 @@ contract Forum is Destructible, Pausable {
         return contribution;
     }
     
-    // TODO:ParserErrorになってしまうので、修正が必要
-    // 投稿を取得
-    // function getContributions() public returns (Contribution[]) onlyOwner {
-    //     return contributions;
-    // }
+    // 投稿をインデックスから取得
+    function getContribution(uint _index) public onlyOwner returns (string name, string email, string content) {
+        return (contributions[_index].name, contributions[_index].email, contributions[_index].content);
+    }
+    
+    function deleteContribution(uint _index) public onlyOwner 
 }
