@@ -98,4 +98,13 @@ contract Forum is Destructible, Pausable {
         msg.sender.transfer(contributions[_index].tipTotal);
         TipEvent(_index, 0);
     }
+    
+    // 終了する
+    function close() public onlyOwner {
+        // 残っている投げ銭は送金しておく
+        for (uint i = 0; i < contributions.length; i++) {
+            msg.sender.transfer(contributions[i].tipTotal);
+        }
+        destroy();
+    }
 }
