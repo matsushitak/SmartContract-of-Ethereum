@@ -62,14 +62,14 @@ contract Forum is Destructible, Pausable {
     }
     
     // 投稿をインデックスから更新
-    function updateContribution(uint _index, string _content) public {
+    function updateContribution(uint _index, string _content) public whenNotPaused {
         require(msg.sender == contributions[_index].contributor);
         contributions[_index] = Contribution(msg.sender, contributions[_index].name, contributions[_index].email, _content);
         UpdateEvent(_index, _content);
     }
     
     // 投稿をインデックスから削除
-    function deleteContribution(uint _index) public {
+    function deleteContribution(uint _index) public whenNotPaused {
         require(msg.sender == contributions[_index].contributor);
         delete contributions[_index];
         DeleteEvent(_index);
