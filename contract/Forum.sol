@@ -18,6 +18,8 @@ contract Forum is Destructible, Pausable {
         string email;
         // 投稿内容
         string content;
+        // 投げ銭合計
+        uint tipTotal;
     }
     
     // 投稿管理
@@ -30,6 +32,8 @@ contract Forum is Destructible, Pausable {
     event UpdateEvent(uint index, string content);
     // 削除イベント
     event DeleteEvent(uint index);
+    // 投げ銭イベント
+    event TipEvent(uint index, uint tipTotal);
     
     // コンストラクタ
     constructor() public {
@@ -53,18 +57,18 @@ contract Forum is Destructible, Pausable {
             _name = "名無しさん";
         }
         // 投稿を作成して保存
-        contributions.push(Contribution(msg.sender, _name, _email, _content));
+        contributions.push(Contribution(msg.sender, _name, _email, _content, 0));
     }
     
     // 投稿をインデックスから取得
-    function getContribution(uint _index) public onlyOwner returns (string name, string email, string content) {
-        return (contributions[_index].name, contributions[_index].email, contributions[_index].content);
+    function getContribution(uint _index) public onlyOwner returns (string name, string email, string content, uint tipTotal) {
+        return (contributions[_index].name, contributions[_index].email, contributions[_index].content, contributions[_index].tipTotal);
     }
     
     // 投稿をインデックスから更新
     function updateContribution(uint _index, string _content) public whenNotPaused {
         require(msg.sender == contributions[_index].contributor);
-        contributions[_index] = Contribution(msg.sender, contributions[_index].name, contributions[_index].email, _content);
+        contributions[_index] = Contribution(contributions[_index].contributor, contributions[_index].name, contributions[_index].email, _content, contributions[_index].tipTotal);
         UpdateEvent(_index, _content);
     }
     
@@ -73,5 +77,13 @@ contract Forum is Destructible, Pausable {
         require(msg.sender == contributions[_index].contributor);
         delete contributions[_index];
         DeleteEvent(_index);
+    }
+    
+    // 投稿に投げ銭を行う
+    function tipContribution(uint _index, uint _tip) public whenNotPaused {
+        require(msg.sender != contributions[_index].contributor);
+        uint tipTotal = contributions[_index].tipTotal + _tip;
+        contributions[_index] = Contribution(contributions[_index].contributor, contributions[_index].name, contributions[_index].email, contributions[_index].content, tipTotal);
+        TipEvent(_index, tipTotal);
     }
 }
