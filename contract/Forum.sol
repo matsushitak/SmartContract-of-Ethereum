@@ -10,6 +10,8 @@ contract Forum is Destructible, Pausable {
     
     // 投稿
     struct Contribution {
+        // 投稿者
+        address contributor;
         // 名前
         string name;
         // メール
@@ -46,7 +48,7 @@ contract Forum is Destructible, Pausable {
             _name = "名無しさん";
         }
         // 投稿を作成して保存
-        contributions.push(Contribution(_name, _email, _content));
+        contributions.push(Contribution(msg.sender, _name, _email, _content));
     }
     
     // 投稿をインデックスから取得
