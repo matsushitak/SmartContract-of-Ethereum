@@ -20,11 +20,16 @@ contract Forum is Destructible, Pausable {
         string content;
     }
     
+    // 投稿管理
+    Contribution[] private contributions;
+    
     // 掲示板タイトル
     string public title;
     
-    // 投稿管理
-    Contribution[] private contributions;
+    // 更新イベント
+    event UpdateEvent(uint index, string content);
+    // 削除イベント
+    event DeleteEvent(uint index);
     
     // コンストラクタ
     constructor() public {
@@ -54,5 +59,19 @@ contract Forum is Destructible, Pausable {
     // 投稿をインデックスから取得
     function getContribution(uint _index) public onlyOwner returns (string name, string email, string content) {
         return (contributions[_index].name, contributions[_index].email, contributions[_index].content);
+    }
+    
+    // 投稿をインデックスから更新
+    function updateContribution(uint _index, string _content) public {
+        require(msg.sender == contributions[_index].contributor);
+        contributions[_index] = Contribution(msg.sender, contributions[_index].name, contributions[_index].email, _content);
+        UpdateEvent(_index, _content);
+    }
+    
+    // 投稿をインデックスから削除
+    function deleteContribution(uint _index) public {
+        require(msg.sender == contributions[_index].contributor);
+        delete contributions[_index];
+        DeleteEvent(_index);
     }
 }
