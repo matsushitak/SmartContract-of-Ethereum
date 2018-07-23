@@ -4,9 +4,11 @@ pragma solidity ^0.4.24;
 import "../node_modules/openzeppelin-solidity/contracts/lifecycle/Destructible.sol";
 // CircuitBreakerパターン
 import "../node_modules/openzeppelin-solidity/contracts/lifecycle/Pausable.sol";
+// 計算を行うためのライブラリ
+import "../node_modules/openzeppelin-solidity/contracts/math/SafeMath.sol";
 
 // 掲示板のコントラクト
-contract Forum is Destructible, Pausable {
+contract Forum is Destructible, Pausable, SafeMath {
     
     // 投稿
     struct Contribution {
@@ -82,7 +84,7 @@ contract Forum is Destructible, Pausable {
     // 投稿に投げ銭を行う
     function tipContribution(uint _index, uint _tip) public whenNotPaused {
         require(msg.sender != contributions[_index].contributor);
-        uint tipTotal = contributions[_index].tipTotal + _tip;
+        uint tipTotal = add(contributions[_index].tipTotal, _tip);
         contributions[_index] = Contribution(contributions[_index].contributor, contributions[_index].name, contributions[_index].email, contributions[_index].content, tipTotal);
         TipEvent(_index, tipTotal);
     }
