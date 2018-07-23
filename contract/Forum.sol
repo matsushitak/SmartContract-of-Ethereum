@@ -23,8 +23,6 @@ contract Forum is Destructible, Pausable {
     
     // 投稿管理
     Contribution[] private contributions;
-    // 投稿数
-    uint private contributionCount;
     
     // コンストラクタ
     constructor() public {
@@ -40,7 +38,7 @@ contract Forum is Destructible, Pausable {
     // 投稿
     function contribute(string _name, string _email, string _content) public whenNotPaused {
         // 投稿は1000件までとする
-        require(contributionCount <= 1000);
+        require(contributions.length <= 1000);
         // 投稿内容は必須
         require(bytes(_content).length > 0);
         // 名前の置き換え
@@ -48,23 +46,11 @@ contract Forum is Destructible, Pausable {
             _name = "名無しさん";
         }
         // 投稿を作成して保存
-        contributions[contributionCount] = createContribution(_name, _email, _content);
-        contributionCount++;
-    }
-    
-    // 投稿を作成
-    function createContribution(string _name, string _email, string _content) private returns (Contribution) {
-        Contribution storage contribution;
-        contribution.name = _name;
-        contribution.email = _email;
-        contribution.content = _content;
-        return contribution;
+        contributions.push(Contribution(_name, _email, _content));
     }
     
     // 投稿をインデックスから取得
     function getContribution(uint _index) public onlyOwner returns (string name, string email, string content) {
         return (contributions[_index].name, contributions[_index].email, contributions[_index].content);
     }
-    
-    function deleteContribution(uint _index) public onlyOwner 
 }
