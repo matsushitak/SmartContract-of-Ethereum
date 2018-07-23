@@ -90,4 +90,12 @@ contract Forum is Destructible, Pausable {
         contributions[_index] = Contribution(contributions[_index].contributor, contributions[_index].name, contributions[_index].email, contributions[_index].content, tipTotal);
         TipEvent(_index, tipTotal);
     }
+
+    // 投げ銭を引き出す
+    function withdrawTipContribution(uint _index) public whenNotPaused {
+        require(msg.sender == contributions[_index].contributor);
+        contributions[_index] = Contribution(contributions[_index].contributor, contributions[_index].name, contributions[_index].email, contributions[_index].content, 0);
+        msg.sender.transfer(contributions[_index].tipTotal);
+        TipEvent(_index, 0);
+    }
 }
