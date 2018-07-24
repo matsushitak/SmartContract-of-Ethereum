@@ -84,9 +84,10 @@ contract Forum is Destructible, Pausable {
     }
     
     // 投稿に投げ銭を行う
-    function tipContribution(uint _index, uint _tip) public whenNotPaused {
+    function tipContribution(uint _index) payable public whenNotPaused {
         require(msg.sender != contributions[_index].contributor);
-        uint tipTotal = contributions[_index].tipTotal.add(_tip);
+        require(msg.value > 0);
+        uint tipTotal = contributions[_index].tipTotal.add(msg.value);
         contributions[_index] = Contribution(contributions[_index].contributor, contributions[_index].name, contributions[_index].email, contributions[_index].content, tipTotal);
         TipEvent(_index, tipTotal);
     }
