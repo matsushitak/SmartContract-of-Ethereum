@@ -65,7 +65,7 @@ contract Forum is Destructible, Pausable {
     }
     
     // 投稿をインデックスから取得
-    function getContribution(uint _index) public onlyOwner returns (string name, string email, string content, uint tipTotal) {
+    function getContribution(uint _index) public view onlyOwner returns (string name, string email, string content, uint tipTotal) {
         return (contributions[_index].name, contributions[_index].email, contributions[_index].content, contributions[_index].tipTotal);
     }
     
