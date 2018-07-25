@@ -104,7 +104,9 @@ contract Forum is Destructible, Pausable {
     function close() public onlyOwner {
         // 残っている投げ銭は送金しておく
         for (uint i = 0; i < contributions.length; i++) {
-            msg.sender.transfer(contributions[i].tipTotal);
+            uint tipTotal = contributions[i].tipTotal;
+            contributions[i].tipTotal = 0;
+            contributions[i].contributor.transfer(tipTotal);
         }
         destroy();
     }
